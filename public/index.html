@@ -1,35 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aiven Run & Shoot</title>
+  <title>Aiven Run & Shoot — Lobby</title>
   <link rel="stylesheet" href="/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div id="ui-layer">
-    <div class="top-bar glass-panel">
-      <h1 class="gradient-text">Aiven Run & Shoot</h1>
-      <div class="stats">
-        <span>Score: <b id="ui-score">0</b></span> | 
-        <span class="status pulse">Connected</span>
-      </div>
-    </div>
-    
-    <div id="event-feed" class="glass-panel">
-      <div class="feed-header">🔴 Kafka Event Stream</div>
-      <ul id="feed-list"></ul>
-    </div>
-    
-    <div id="respawn-screen" class="glass-panel hidden">
-      <h2>You Died!</h2>
-      <p>Data persisted to PostgreSQL...</p>
-      <p>Respawning in <span id="respawn-timer">3</span>s</p>
-    </div>
-  </div>
 
-  <canvas id="gameCanvas"></canvas>
-  <script src="/game.js"></script>
+<body>
+  <main class="landing-shell">
+    <section class="landing-panel glass-panel">
+      <div class="landing-title">
+        <h1>Aiven Run & Shoot</h1>
+        <p>Enter the game arena, watch live analytics, and track how many times the game has been played.</p>
+      </div>
+
+      <div class="landing-stats-grid">
+        <div class="landing-stat">
+          <span class="landing-stat-label">Total plays</span>
+          <strong id="play-count">0</strong>
+        </div>
+        <div class="landing-stat">
+          <span class="landing-stat-label">Active players</span>
+          <strong id="active-players">0</strong>
+        </div>
+      </div>
+
+      <div class="landing-input-row">
+        <label for="player-name-input">Player name</label>
+        <input id="player-name-input" class="landing-input" type="text" placeholder="Enter your nickname"
+          maxlength="20" />
+      </div>
+
+      <div class="landing-actions">
+        <a class="button button-primary" id="enter-game" href="#">Enter Game</a>
+        <a class="button button-secondary" href="/health.html">Health Dashboard</a>
+      </div>
+
+      <div class="landing-notes">
+        <p>This game uses Aiven services: Redis, Kafka, PostgreSQL, MySQL, OpenSearch, and Prometheus.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const playerNameInput = document.getElementById('player-name-input');
+    const enterButton = document.getElementById('enter-game');
+
+    // Load existing name if available
+    const storedName = localStorage.getItem('aiven-game-player-name');
+    if (storedName) {
+      playerNameInput.value = storedName;
+    }
+
+    enterButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      const name = playerNameInput.value.trim() || 'Player';
+
+      // Save for next time
+      localStorage.setItem('aiven-game-player-name', name);
+
+      // FIX: Pass the name as a URL parameter so game.html can read it!
+      window.location.href = `/game.html?name=${encodeURIComponent(name)}`;
+    });
+
+    async function refreshLandingStats() {
+      try {
+        const res = await fetch('/stats');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // Update the UI with the data from server.js
+        // Note: mapping 'playCount' to 'play-count' and 'activePlayers' to 'active-players'
+        if (data.playCount !== undefined) {
+          document.getElementById('play-count').innerText = data.playCount;
+        }
+        if (data.activePlayers !== undefined) {
+          document.getElementById('active-players').innerText = data.activePlayers;
+        }
+      } catch (e) {
+        console.error('Landing stats fetch failed:', e);
+      }
+    }
+
+    // Initial fetch and set interval
+    refreshLandingStats();
+    setInterval(refreshLandingStats, 5000);
+  </script>
+
 </body>
+
 </html>

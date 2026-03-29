@@ -1,0 +1,38 @@
+# --- OS Metadata ---
+.DS_Store
+Thumbs.db
+
+# --- Node.js Dependencies ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Aiven & Security (CRITICAL) ---
+# Ignore the local environment variables
+.env
+.env.local
+.env.production
+
+# Ignore the SSL/CA certificates
+# We use AIVEN_CA_CERT env var in production instead of files
+*.pem
+*.crt
+*.key
+certs/
+
+# --- IDE / VS Code ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Build / Dist ---
+dist/
+build/
+.cache/
+
+# --- Logs ---
+logs/
+*.log

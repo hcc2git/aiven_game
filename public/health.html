@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Dashboard | Aiven Run & Shoot</title>
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="landing-shell">
+    <section class="landing-panel glass-panel">
+      <div class="landing-title">
+        <h1>Health Dashboard</h1>
+        <p>Monitor the game server health and uptime via the Aiven Run & Shoot status page.</p>
+      </div>
+
+      <div class="landing-stats-grid">
+        <div class="landing-stat">
+          <span class="landing-stat-label">Status</span>
+          <strong id="health-status">Loading...</strong>
+        </div>
+        <div class="landing-stat">
+          <span class="landing-stat-label">Uptime (s)</span>
+          <strong id="health-uptime">0</strong>
+        </div>
+        <div class="landing-stat">
+          <span class="landing-stat-label">Timestamp</span>
+          <strong id="health-timestamp">-</strong>
+        </div>
+      </div>
+
+      <div class="landing-actions">
+        <a class="button button-primary" href="/">Back to Lobby</a>
+        <a class="button button-secondary" href="/metrics">Metrics Endpoint</a>
+      </div>
+
+      <div class="landing-notes">
+        <p>The health endpoint is powered by `/health` and updated every 5 seconds.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function refreshHealth() {
+      try {
+        const res = await fetch('/health');
+        if (!res.ok) {
+          document.getElementById('health-status').innerText = 'unavailable';
+          return;
+        }
+        const data = await res.json();
+        document.getElementById('health-status').innerText = data.status || 'unknown';
+        document.getElementById('health-uptime').innerText = Math.round(data.uptime || 0);
+        document.getElementById('health-timestamp').innerText = data.timestamp ? new Date(data.timestamp).toLocaleString() : '-';
+      } catch (e) {
+        console.error('Health refresh failed:', e);
+        document.getElementById('health-status').innerText = 'error';
+      }
+    }
+
+    refreshHealth();
+    setInterval(refreshHealth, 5000);
+  </script>
+</body>
+</html>

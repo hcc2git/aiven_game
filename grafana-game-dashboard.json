@@ -1,0 +1,53 @@
+{
+  "id": null,
+  "title": "Aiven Run & Shoot Metrics",
+  "tags": ["aiven", "game", "prometheus"],
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Plays",
+      "datasource": "Prometheus",
+      "targets": [{
+        "expr": "game_server_player_joins_total",
+        "legendFormat": "joins"
+      }],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "graph",
+      "title": "Events Over Time",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "game_server_player_moves_total", "legendFormat": "moves" },
+        { "expr": "game_server_player_shoots_total", "legendFormat": "shoots" },
+        { "expr": "game_server_player_deaths_total", "legendFormat": "deaths" }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "stat",
+      "title": "Player Moves",
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "game_server_player_moves_total" }],
+      "gridPos": { "x": 0, "y": 5, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Player Shoots",
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "game_server_player_shoots_total" }],
+      "gridPos": { "x": 6, "y": 8, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Player Deaths",
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "game_server_player_deaths_total" }],
+      "gridPos": { "x": 12, "y": 8, "w": 6, "h": 5 }
+    }
+  ]
+}

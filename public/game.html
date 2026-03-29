@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aiven Run & Shoot</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="ui-layer">
+        <div class="top-bar glass-panel">
+            <h1 class="gradient-text">Aiven Run & Shoot</h1>
+            <div class="stats">
+                <span>Score: <b id="ui-score">0</b></span>
+                <span>|</span>
+                <span>Players: <b id="ui-players">0</b></span>
+                <span>|</span>
+                <span>Total Plays: <b id="play-count">0</b></span>
+            </div>
+            <div class="hint">Shoot: left click or press <strong>Space</strong></div>
+            <div id="kill-indicator" class="kill-indicator hidden"></div>
+
+            <div id="event-feed" class="glass-panel">
+                <div class="feed-header">🔴 Kafka Event Stream</div>
+                <ul id="feed-list"></ul>
+            </div>
+
+            <div id="analytics-panel" class="glass-panel">
+                <div class="analytics-header">📊 Live Game Analytics</div>
+                <div class="analytics-grid">
+                    <div class="analytics-box">
+                        <div class="analytics-title">Leaderboard</div>
+                        <ul id="leaderboard-list"></ul>
+                    </div>
+                    <div class="analytics-box">
+                        <div class="analytics-title">Recent OpenSearch Events</div>
+                        <ul id="event-history-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="respawn-screen" class="glass-panel hidden">
+                <h2>You Died!</h2>
+                <p>Data persisted to PostgreSQL...</p>
+                <p>Respawning in <span id="respawn-timer">3</span>s</p>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+        <script src="/game.js"></script>
+</body>
+
+</html>
